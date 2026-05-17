@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Restaurante Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+</head>
+<body>
+
+    <div class="container-fluid p-0">
+        <div class="row g-0 login-container">
+            
+            <div class="col-md-5 col-lg-4 login-form-col">
+                <div class="login-card">
+                    <div class="mb-5">
+                        <h2 class="brand-title fw-bold">Restaurante Pro</h2>
+                        <h5 class="fw-bold text-dark">Panel de Gestión</h5>
+                        <p class="text-muted small">Accede para gestionar tus mesas y pedidos.</p>
+                    </div>
+
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                      {% if messages %}
+                        {% for category, message in messages %}
+                          <div class="alert alert-{{ category }} py-2 small alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close shadow-none" data-bs-dismiss="alert" aria-label="Close"></button>
+                          </div>
+                        {% endfor %}
+                      {% endif %}
+                    {% endwith %}
+
+                    <form method="POST" action="{{ url_for('main.login') }}">
+                        <div class="mb-4">
+                            <label class="form-label text-secondary small fw-bold">Usuario</label>
+                            <input type="text" name="username" class="form-control form-control-lg border-2" placeholder="Nombre de usuario" required autofocus>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label text-secondary small fw-bold">Contraseña</label>
+                            <input type="password" name="password" class="form-control form-control-lg border-2" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mt-2 btn-lg fw-bold">
+                            Iniciar Sesión
+                        </button>
+                    </form>
+                    
+                    <div class="mt-5 text-center">
+                        <p class="text-muted small">© 2024 Restaurante Pro</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-7 col-lg-8 login-image-col d-none d-md-flex">
+                <div class="image-overlay-content">
+                    <h1 class="display-3 fw-bold mb-4">La excelencia<br>en cada plato.</h1>
+                    <p class="lead">Optimiza tu servicio y brinda la mejor experiencia a tus comensales con nuestra plataforma inteligente.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

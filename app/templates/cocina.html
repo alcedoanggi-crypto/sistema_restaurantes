@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="fw-bold mb-4"><i class="fas fa-fire text-danger me-2"></i>Pedidos en Cocina</h2>
+    
+    <div class="row row-cols-1 row-cols-md-3 g-4" id="cocina-container">
+        {% for item in pendientes %}
+        <div class="col" id="item-card-{{ item.id }}">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="badge bg-dark">Mesa {{ item.order.table_id }}</span>
+                        <small class="text-muted">Orden #{{ item.order_id }}</small>
+                    </div>
+                    <h4 class="fw-bold m-0 text-primary">{{ item.quantity }} x {{ item.product_name }}</h4>
+                    <hr>
+                    <button class="btn btn-success w-100 fw-bold py-2" onclick="marcarListo({{ item.id }})">
+                        <i class="fas fa-check me-2"></i>¡PLATO LISTO!
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+function marcarListo(id) {
+    fetch(`/item_listo/${id}`, { method: 'POST' })
+    .then(res => res.json())
+    .then(data => {
+        if(data.status === 'success') {
+            document.getElementById(`item-card-${id}`).remove();
+        }
+    });
+}
+
+// Auto-recarga cada 30 segundos para ver nuevos pedidos
+setTimeout(() => { location.reload(); }, 30000);
+</script>
+{% endblock %}

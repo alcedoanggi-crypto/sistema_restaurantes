@@ -1,0 +1,245 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h2 class="fw-bold text-dark m-0"><i class="fas fa-cogs text-primary me-2"></i>Panel de Configuración</h2>
+            <p class="text-muted">Administra los productos, mesas y accesos del sistema.</p>
+        </div>
+        <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-dark px-4 rounded-pill shadow-sm">
+            <i class="fas fa-arrow-left me-2"></i>Volver al Salón
+        </a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm h-100 rounded-4">
+                <div class="card-header bg-primary text-white py-3 border-0 rounded-top-4">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-plus-circle me-2"></i>Nuevo Producto</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form action="{{ url_for('main.settings') }}" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="action" value="create_product">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-secondary">Nombre</label>
+                            <input type="text" name="name" class="form-control bg-light border-0 py-2" placeholder="Ej: Pizza" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-secondary">Precio ($)</label>
+                            <input type="number" step="0.01" name="price" class="form-control bg-light border-0 py-2" placeholder="0.00" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold text-secondary">Imagen</label>
+                            <input type="file" name="image" class="form-control bg-light border-0 py-2">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 fw-bold py-2 shadow-sm">
+                            <i class="fas fa-save me-2"></i>Guardar Producto
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm h-100 rounded-4">
+                <div class="card-header bg-success text-white py-3 border-0 rounded-top-4">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-chair me-2"></i>Configurar Salón</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form action="{{ url_for('main.settings') }}" method="POST">
+                        <input type="hidden" name="action" value="create_table">
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold text-secondary">Número de Mesa</label>
+                            <input type="number" name="number" class="form-control bg-light border-0 py-2" placeholder="Ej: 1" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 fw-bold py-2 shadow-sm">
+                            <i class="fas fa-plus me-2"></i>Añadir Mesa
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm h-100 rounded-4">
+                <div class="card-header bg-dark text-white py-3 border-0 rounded-top-4">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-user-shield me-2"></i>Control de Acceso</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form action="{{ url_for('main.settings') }}" method="POST">
+                        <input type="hidden" name="action" value="create_user">
+                        <div class="mb-2">
+                            <input type="text" name="username" class="form-control bg-light border-0 py-2" placeholder="Usuario" required>
+                        </div>
+                        <div class="mb-2">
+                            <input type="password" name="password" class="form-control bg-light border-0 py-2" placeholder="Contraseña" required>
+                        </div>
+                        <div class="mb-3">
+                            <select name="role" class="form-select mb-3">
+                            <option value="mesero">Mesero</option>
+                            <option value="admin">Administrador / Caja</option>
+                            <option value="cocina">Cocina</option> 
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-dark w-100 fw-bold py-2 shadow-sm">Crear Acceso</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-5 opacity-25">
+
+    <div class="card border-0 shadow-sm rounded-4 mb-5">
+        <div class="card-header bg-white py-4 border-0">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h5 class="mb-0 fw-bold text-dark"><i class="fas fa-list me-2 text-primary"></i>Productos Registrados</h5>
+                </div>
+                <div class="col-md-6 mt-3 mt-md-0">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-0"><i class="fas fa-search text-muted"></i></span>
+                        <input type="text" id="productSearch" class="form-control bg-light border-0" placeholder="Buscar producto por nombre o ID...">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="productsTable">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4 border-0 py-3 text-secondary small fw-bold">IMAGEN</th>
+                        <th class="border-0 py-3 text-secondary small fw-bold">PRODUCTO</th>
+                        <th class="border-0 py-3 text-secondary small fw-bold text-center">PRECIO</th>
+                        <th class="pe-4 border-0 py-3 text-secondary small fw-bold text-end">ACCIONES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td class="ps-4">
+                            {% if product.image_url %}
+                                <img src="{{ url_for('static', filename='uploads/products/' + product.image_url) }}"
+                                     class="rounded-3 shadow-sm" style="width: 45px; height: 45px; object-fit: cover;">
+                            {% else %}
+                                <div class="bg-light rounded-3 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                                    <i class="fas fa-utensils text-muted small"></i>
+                                </div>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="fw-bold text-dark product-name">{{ product.name }}</div>
+                            <div class="text-muted small">#{{ product.id }}</div>
+                        </td>
+                        <td class="text-center fw-bold text-primary">$ {{ "{:,.2f}".format(product.price) }}</td>
+                        <td class="pe-4 text-end">
+                            <div class="btn-group shadow-sm rounded-pill overflow-hidden">
+                                <button class="btn btn-sm btn-white border-end" onclick="printProduct('{{ product.id }}')" title="Imprimir">
+                                    <i class="fas fa-print text-info"></i>
+                                </button>
+                                <button class="btn btn-sm btn-white border-end" onclick="openEditModal('{{ product.id }}', '{{ product.name }}', '{{ product.price }}')" title="Editar">
+                                    <i class="fas fa-edit text-primary"></i>
+                                </button>
+                                <button class="btn btn-sm btn-white text-danger" onclick="confirmDelete('{{ product.id }}', '{{ product.name }}')" title="Eliminar">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header bg-primary text-white border-0 rounded-top-4">
+                <h5 class="modal-title fw-bold">Editar Producto</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="editForm" method="POST" enctype="multipart/form-data">
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Nombre</label>
+                        <input type="text" id="edit_name" name="name" class="form-control bg-light border-0" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Precio ($)</label>
+                        <input type="number" step="0.01" id="edit_price" name="price" class="form-control bg-light border-0" required>
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label small fw-bold">Cambiar Imagen</label>
+                        <input type="file" name="image" class="form-control bg-light border-0">
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-4 pt-0">
+                    <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary px-4 fw-bold">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content border-0 shadow-lg rounded-4 text-center">
+            <div class="modal-body p-4">
+                <div class="mb-3">
+                    <i class="fas fa-exclamation-circle fa-4x text-danger animate__animated animate__pulse animate__infinite"></i>
+                </div>
+                <h5 class="fw-bold mb-2">¿Estás seguro?</h5>
+                <p class="text-muted small">Vas a eliminar <strong id="deleteProductName"></strong>. Esta acción no se puede deshacer.</p>
+                <form id="deleteForm" method="POST">
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-light w-100 rounded-3" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger w-100 rounded-3 fw-bold">Sí, Eliminar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Lógica de Buscado en Tiempo Real
+document.getElementById('productSearch').addEventListener('keyup', function() {
+    let filter = this.value.toLowerCase();
+    let rows = document.querySelectorAll('#productsTable tbody tr');
+
+    rows.forEach(row => {
+        let name = row.querySelector('.product-name').textContent.toLowerCase();
+        let id = row.querySelector('.text-muted').textContent.toLowerCase();
+        row.style.display = (name.includes(filter) || id.includes(filter)) ? '' : 'none';
+    });
+});
+
+// Función para abrir Modal de Edición
+function openEditModal(id, name, price) {
+    document.getElementById('editForm').action = `/edit_product/${id}`;
+    document.getElementById('edit_name').value = name;
+    document.getElementById('edit_price').value = price;
+    new bootstrap.Modal(document.getElementById('editModal')).show();
+}
+
+// Función para abrir Modal de Eliminación (NUEVO)
+function confirmDelete(id, name) {
+    document.getElementById('deleteForm').action = `/delete_product/${id}`;
+    document.getElementById('deleteProductName').textContent = name;
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+
+// Función Imprimir
+function printProduct(productId) {
+    fetch(`/get_product/${productId}`).then(res => res.json()).then(data => {
+        const win = window.open('', '', 'width=400,height=600');
+        win.document.write(`<html><body style="text-align:center;font-family:sans-serif;padding:30px;"><h2>${data.name}</h2><h1>$ ${data.price.toFixed(2)}</h1><script>window.onload=()=>{window.print();window.close();}<\/script></body></html>`);
+        win.document.close();
+    });
+}
+</script>
+{% endblock %}
