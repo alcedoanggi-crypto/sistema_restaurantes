@@ -27,6 +27,9 @@ El sistema se rige bajo un estándar modular profesional:
 - `routes.py`: Controladores de rutas, endpoints y lógica de negocio principal.
 - `config.py`: Parámetros de entorno y configuraciones de seguridad del servidor.
 
+## 📁 imagen del proyecto
+<img width="1286" height="945" alt="image" src="https://github.com/user-attachments/assets/bbbf17f8-a902-499f-83ec-df4217f0f58a" />
+
 ## ⚙️ Configuración e Instalación Local
 
 1. **Clonar el repositorio:**
