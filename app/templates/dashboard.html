@@ -73,28 +73,30 @@
 </footer>
 
 <div class="modal fade" id="orderModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-fullscreen-md-down">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden order-modal-content">
             <div class="modal-header bg-dark text-white border-0">
                 <h5 class="modal-title fw-bold">Mesa <span id="modalTableNumber">--</span></h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
 
-            <div class="modal-body p-0">
-                <div class="row g-0">
-                    <div class="col-md-7 border-end p-4 bg-light">
-                        <div class="input-group shadow-sm border-0 rounded-pill bg-white overflow-hidden mb-4">
-                            <span class="input-group-text bg-white border-0 ps-4">
-                                <i class="fas fa-search text-primary"></i>
-                            </span>
-                            <input type="text" id="productSearch" class="form-control border-0 py-3 ps-2 shadow-none"
-                                   placeholder="Buscar producto..." onkeyup="filterProducts()" autocomplete="off">
-                            <button class="btn btn-white border-0 pe-4 text-muted" type="button" onclick="clearSearch()">
-                                <i class="fas fa-times"></i>
-                            </button>
+            <div class="modal-body p-0 order-modal-body">
+                <div class="row g-0 h-100">
+                    <div class="col-md-7 border-end bg-light order-modal-products">
+                        <div class="p-3 p-md-4 pb-0">
+                            <div class="input-group shadow-sm border-0 rounded-pill bg-white overflow-hidden mb-3 mb-md-4">
+                                <span class="input-group-text bg-white border-0 ps-4">
+                                    <i class="fas fa-search text-primary"></i>
+                                </span>
+                                <input type="text" id="productSearch" class="form-control border-0 py-3 ps-2 shadow-none"
+                                       placeholder="Buscar producto..." onkeyup="filterProducts()" autocomplete="off">
+                                <button class="btn btn-white border-0 pe-4 text-muted" type="button" onclick="clearSearch()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
                         </div>
 
-                        <div id="productList" class="row row-cols-2 row-cols-lg-3 g-3" style="max-height: 450px; overflow-y: auto;">
+                        <div id="productList" class="row row-cols-2 row-cols-lg-3 g-3 order-modal-product-list p-3 p-md-4 pt-0">
                             {% for product in products %}
                             <div class="col product-card-container">
                                 <div class="card h-100 border-0 shadow-sm product-item-card" onclick="addToOrder('{{ product.id }}', '{{ product.name }}', {{ product.price }})">
@@ -117,13 +119,13 @@
                         </div>
                     </div>
 
-                    <div class="col-md-5 p-4 bg-white d-flex flex-column">
-                        <h6 class="fw-bold text-secondary small mb-3">PEDIDO ACTUAL</h6>
-                        <div class="flex-grow-1" style="min-height: 300px; max-height: 400px; overflow-y: auto;">
+                    <div class="col-md-5 bg-white d-flex flex-column order-modal-cart">
+                        <h6 class="fw-bold text-secondary small mb-3 p-3 p-md-4 pb-0">PEDIDO ACTUAL</h6>
+                        <div class="flex-grow-1 order-modal-cart-items px-3 px-md-4">
                             <ul id="orderSummary" class="list-group list-group-flush"></ul>
                         </div>
 
-                        <div class="mt-4 pt-3 border-top">
+                        <div class="pt-3 border-top bg-white order-modal-footer p-3 p-md-4">
                             <div class="d-flex justify-content-between mb-3">
                                 <span class="h5">Total:</span>
                                 <span class="h3 fw-bold text-dark">Bs <span id="orderTotal">0.00</span></span>

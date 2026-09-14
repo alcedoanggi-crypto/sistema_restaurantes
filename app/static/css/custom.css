@@ -56,6 +56,65 @@ body, html {
     backdrop-filter: blur(5px);
 }
 
+/* --- MODAL DE PEDIDO: RESPONSIVE (ESCRITORIO Y MÓVIL) --- */
+.order-modal-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.order-modal-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.order-modal-body .row {
+    height: 100%;
+    margin: 0;
+}
+
+.order-modal-products,
+.order-modal-cart {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.order-modal-product-list {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.order-modal-cart-items {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.order-modal-footer {
+    flex-shrink: 0;
+}
+
+/* Escritorio y tablets: dos columnas lado a lado */
+@media (min-width: 768px) {
+    .order-modal-content { max-height: 85vh; }
+    .order-modal-products,
+    .order-modal-cart { height: 100%; }
+}
+
+/* Móvil: modal a pantalla completa, dividido en menú (arriba) y carrito (abajo) */
+@media (max-width: 767.98px) {
+    .order-modal-content { height: 100%; }
+    .order-modal-body .row { flex-direction: column; flex-wrap: nowrap; }
+    .order-modal-products {
+        height: 52%;
+        border-right: none !important;
+        border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+    .order-modal-cart { height: 48%; }
+}
+
 /* --- 4. COMPONENTES DE UI (BUSCADOR Y MODAL) --- */
 .product-item-card {
     border-radius: 15px;

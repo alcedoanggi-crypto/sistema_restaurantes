@@ -24,7 +24,7 @@
         <div class="divider"></div>
         <div style="text-align: left;">
             FACTURA: #{{ "%06d"|format(order.id) }}<br>
-            FECHA: {{ order.id }} <br>CAJERO: {{ session['username']|upper }}
+            FECHA: {{ order.created_at.strftime('%d/%m/%Y %H:%M') }} <br>CAJERO: {{ session['username']|upper }}
         </div>
     </div>
 

@@ -31,7 +31,7 @@
             <span class="badge bg-primary-subtle text-primary text-uppercase mb-3 px-3">Estado de Cuenta</span>
             <div class="text-muted small">
                 Mesa: <strong>{{ order.table_id }}</strong> | Orden: #{{ order.id }}<br>
-                Fecha: {{ order.id }} </div>
+                Fecha: {{ order.created_at.strftime('%d/%m/%Y %H:%M') }} </div>
         </div>
 
         <div class="mb-4">
