@@ -18,6 +18,7 @@ Sistema web para la gestión operativa de un restaurante: control de mesas en ti
 - [Configuración](#configuración)
 - [Resumen de cambios de esta actualización](#resumen-de-cambios-de-esta-actualización)
 - [Limitaciones conocidas / próximos pasos](#limitaciones-conocidas--próximos-pasos)
+- [Autora](#autora)
 
 ---
 
@@ -168,5 +169,10 @@ Esta actualización tomó el MVP inicial y lo llevó a un estado más completo y
 - El servidor de desarrollo de Flask no debe usarse en producción; para producción usar un servidor WSGI como Gunicorn o Waitress detrás de un proxy (Nginx).
 
 ---
+
+## Autora
+
+**Anggie Alcedo** — Ingeniera de Sistemas | Full Stack Developer & QA Automation
+[GitHub](https://github.com/alcedoanggi-crypto) · alcedoanggi@gmail.com
 
 Desarrollado como sistema de gestión interno para restaurantes. Contribuciones y sugerencias son bienvenidas.
