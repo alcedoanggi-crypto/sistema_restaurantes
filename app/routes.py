@@ -117,7 +117,13 @@ def settings():
 
         # Lógica para crear un nuevo usuario
         elif action == 'create_user':
-            username = request.form.get('username')
+            username = request.form.get('username', '').strip()
+            existing_user = User.query.filter_by(username=username).first()
+
+            if existing_user:
+                flash(f'El usuario "{username}" ya existe.', 'danger')
+                return redirect(url_for('main.settings'))
+
             password = generate_password_hash(request.form.get('password'))
             role = request.form.get('role', 'mesero')
             db.session.add(User(username=username, password=password, role=role))
@@ -128,11 +134,12 @@ def settings():
         return redirect(url_for('main.settings'))
 
     # 3. Preparación de la vista (GET)
-    # Consultamos todos los productos para que se listen en la tabla inferior
+    # Consultamos todos los datos para que se listen en los paneles inferiores
     products = Product.query.all()
+    tables = TableModel.query.order_by(TableModel.number).all()
+    users = User.query.order_by(User.username).all()
 
-    # IMPORTANTE: Pasamos la variable 'products' al template
-    return render_template('settings.html', products=products)
+    return render_template('settings.html', products=products, tables=tables, users=users)
 
 @main.route('/edit_product/<int:product_id>', methods=['POST'])
 def edit_product(product_id):
@@ -186,6 +193,80 @@ def get_product(product_id):
         'price': product.price,
         'image_url': product.image_url
     })
+
+@main.route('/edit_table/<int:table_id>', methods=['POST'])
+def edit_table(table_id):
+    if 'user_id' not in session or session.get('role') != 'admin':
+        return jsonify({'status': 'error', 'message': 'No autorizado'}), 403
+
+    table = TableModel.query.get_or_404(table_id)
+    number = request.form.get('number')
+
+    duplicate = TableModel.query.filter(TableModel.number == number, TableModel.id != table_id).first()
+    if duplicate:
+        flash(f'Ya existe otra mesa con el número {number}.', 'danger')
+        return redirect(url_for('main.settings'))
+
+    table.number = number
+    db.session.commit()
+    flash('Mesa actualizada correctamente', 'success')
+    return redirect(url_for('main.settings'))
+
+
+@main.route('/delete_table/<int:table_id>', methods=['POST'])
+def delete_table(table_id):
+    if 'user_id' not in session or session.get('role') != 'admin':
+        return jsonify({'status': 'error', 'message': 'No autorizado'}), 403
+
+    table = TableModel.query.get_or_404(table_id)
+
+    if table.status == 'ocupada':
+        flash('No puedes eliminar una mesa que está ocupada.', 'danger')
+        return redirect(url_for('main.settings'))
+
+    db.session.delete(table)
+    db.session.commit()
+    flash(f'Mesa {table.number} eliminada con éxito', 'success')
+    return redirect(url_for('main.settings'))
+
+
+@main.route('/edit_user/<int:user_id>', methods=['POST'])
+def edit_user(user_id):
+    if 'user_id' not in session or session.get('role') != 'admin':
+        return jsonify({'status': 'error', 'message': 'No autorizado'}), 403
+
+    user = User.query.get_or_404(user_id)
+    user.role = request.form.get('role', user.role)
+
+    new_password = request.form.get('password', '').strip()
+    if new_password:
+        user.password = generate_password_hash(new_password)
+
+    db.session.commit()
+    flash(f'Usuario "{user.username}" actualizado correctamente', 'success')
+    return redirect(url_for('main.settings'))
+
+
+@main.route('/delete_user/<int:user_id>', methods=['POST'])
+def delete_user(user_id):
+    if 'user_id' not in session or session.get('role') != 'admin':
+        return jsonify({'status': 'error', 'message': 'No autorizado'}), 403
+
+    if user_id == session.get('user_id'):
+        flash('No puedes eliminar tu propio usuario mientras tienes la sesión abierta.', 'danger')
+        return redirect(url_for('main.settings'))
+
+    user = User.query.get_or_404(user_id)
+
+    if user.role == 'admin' and User.query.filter_by(role='admin').count() <= 1:
+        flash('No puedes eliminar al único administrador del sistema.', 'danger')
+        return redirect(url_for('main.settings'))
+
+    db.session.delete(user)
+    db.session.commit()
+    flash(f'Usuario "{user.username}" eliminado con éxito', 'success')
+    return redirect(url_for('main.settings'))
+
 
 @main.route('/logout')
 def logout():
@@ -307,17 +388,6 @@ def print_ticket(order_id):
 
     # Cambiamos 'ticket_print.html' por nuestro nuevo 'invoice_print.html'
     return render_template('invoice_print.html', order=order, items=items)
-
-@main.route('/add_table')
-def add_table():
-    # Aquí irá tu lógica para crear mesas
-    return "Pantalla para crear mesas"
-
-@main.route('/add_user')
-def add_user():
-    # Aquí irá tu lógica para registrar usuarios
-    return "Pantalla para registrar usuarios"
-
 
 @main.route('/print_pre_cuenta/<int:table_id>')
 def print_pre_cuenta(table_id):

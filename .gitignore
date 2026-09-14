@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+env/
+.venv/
+
+# Base de datos local (se genera automáticamente al iniciar la app)
+instance/
+*.db
+
+# Variables de entorno / secretos
+.env
+
+# Editores / IDEs
+.idea/
+.vscode/
+
+# Imágenes de productos subidas en runtime (la carpeta se recrea automáticamente)
+app/static/uploads/products/*
