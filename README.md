@@ -50,6 +50,20 @@ Sistema web para la gestión operativa de un restaurante: control de mesas en ti
 | ![Settings](docs/screenshots/settings.png) |
 | ![CRUD mesas y usuarios](docs/screenshots/settings_crud.png) |
 
+### Evidencia: factura fiscal
+
+Al facturar una mesa, el sistema genera e imprime automáticamente el comprobante fiscal (con desglose de IVA y fecha/hora reales):
+
+![Factura fiscal](docs/screenshots/factura_fiscal.png)
+
+### Evidencia: adaptable a celular
+
+El login y la toma de pedidos funcionan igual de bien desde un teléfono. El modal de pedidos queda dividido en menú (arriba) y carrito con total/botones siempre visibles (abajo), sin necesidad de hacer scroll:
+
+| Login (móvil) | Pedido (móvil) | Pedido (escritorio) |
+|---|---|---|
+| ![Login móvil](docs/screenshots/login_mobile.png) | ![Pedido móvil](docs/screenshots/pedido_mobile.png) | ![Pedido escritorio](docs/screenshots/pedido_desktop.png) |
+
 ## Stack tecnológico
 
 - **Backend**: Python 3, Flask, Flask-SQLAlchemy, Flask-Login, Werkzeug
